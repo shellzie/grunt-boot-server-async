@@ -1,4 +1,5 @@
-# grunt-boot-rails-async
+grunt-boot-rails-async
+======================
 
 > Boot the rails server asynchrounously, . Plugin completes task when server is fully booted, allowing execution against running server.
 
