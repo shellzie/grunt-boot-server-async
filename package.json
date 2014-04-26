@@ -1,0 +1,41 @@
+{
+  "name": "grunt-boot-rails-async",
+  "description": "Boot the rails server asynchrounously, . Plugin completes task when server is fully booted, allowing execution against running server.",
+  "version": "0.1.1",
+  "homepage": "https://github.com/shellzie/grunt-boot-rails-async",
+  "author": {
+    "name": "Michelle Kam",
+    "email": "michellekam@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:shellzie/grunt-boot-rails-async.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shellzie/grunt-boot-rails-async/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/shellzie/grunt-boot-rails-async/blob/master/LICENSE-MIT"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "^0.9.2",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-nodeunit": "^0.3.3",
+    "grunt": "~0.4.4"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.4"
+  },
+  "keywords": [
+    "gruntplugin"
+  ]
+}
