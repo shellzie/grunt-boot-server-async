@@ -14,14 +14,14 @@ module.exports = function (grunt) {
     // Please see the Grunt documentation for more information regarding task
     // creation: http://gruntjs.com/creating-tasks
 
-    grunt.registerMultiTask('boot_rails_async', 'Boot the rails server asynchrounously, . Plugin completes task when server is fully booted, allowing execution against running server.', function () {
+    grunt.registerMultiTask('boot_server_async', 'Boot a server asynchrounously. Task completes on seeing a specific line from the server on stdout.', function () {
         // Merge task-specific and/or target-specific options with these defaults.
         var done = this.async();
         var options = this.options({
             cmd:'rails server',
             //args:'server',
             //gemset: 'showroom_harmony_cms',
-            gem_path: '/Users/mkam1/.rvm/gems/ruby-1.9.3-p194@showroom_harmony_cms:/Users/mkam1/.rvm/gems/ruby-1.9.3-p194@global',
+            env:{},
             cwd:'.',
             failOnError: true
         });
@@ -29,42 +29,47 @@ module.exports = function (grunt) {
         // TODO Find way of changing current working directory, plugins shouldn't change the workding directory
         grunt.file.setBase(options.cwd);
 
-        var rails_cmd = options.cmd;
+        var server_cmd = options.cmd;
 
         var execOptions = {
             cwd:options.cwd,
-            env:{
-                GEM_PATH:options.gem_path
-            }
+            env:options.env
         };
 
-        // TODO Iterate over all process environment variables
-        process.env['GEM_PATH'] = options.gem_path;
 
-        var child_process = exec(rails_cmd, options.args, execOptions, function(err, stdout, stdin){
-            grunt.verbose.writeln('>>>>>>>>>>>>>>> env vars = ');
-            grunt.verbose.writeln('Callback Called');
-            if (err && options.failOnError) {
-                grunt.warn(err);
-            }
-            done();
+
+        // TODO Iterate over all process environment variables
+        process.env['GEM_PATH'] = options.env['GEM_PATH'];
+
+        var child_process = exec(server_cmd, options.args, execOptions, function(err, stdout, stdin){
+
         });
 
         var captureOutput = function (child, output) {
             child.pipe(output);
         };
-
-        grunt.verbose.writeln('Command:', rails_cmd);
+        grunt.file.setBase('/Users/mkam1/michelle_sbm_workspace/CMT/harmony_cms');
+        grunt.verbose.writeln('Command:', server_cmd);
 
         captureOutput(child_process.stdout, process.stdout);
 
         captureOutput(child_process.stderr, process.stderr);
 
+        var printOutput = true;
         // Listen to output data
-        child_process.stdout.on('data', function(chunk){
+
+        var myChunkFunction = function(chunk){
             grunt.verbose.writeln(">>>> CHUNK: "+chunk + " >>> END CHUNK");
-            done();
-        });
+
+            if(printOutput){
+                printOutput = false;
+                child_process.stdout.removeListener('data', myChunkFunction);
+                grunt.verbose.writeln('>>>>>>>>>>>>>>>>>>>>>> Killing Piping');
+                done();
+            }
+        };
+
+        child_process.stdout.on('data', myChunkFunction);
     });
 
 };

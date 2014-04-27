@@ -29,11 +29,14 @@ module.exports = function(grunt) {
     },
 
     // Configuration to be run (and then tested).
-    boot_rails_async: {
+    boot_server_async: {
       default_options: {
           options: {
             cwd: '/Users/mkam1/michelle_sbm_workspace/CMT/harmony_cms/coverage/e2e/instrumented/dev/spec/dummy',
-            gem_path: '/Users/mkam1/.rvm/gems/ruby-1.9.3-p194@showroom_harmony_cms:/Users/mkam1/.rvm/gems/ruby-1.9.3-p194@global'
+            gem_path: '/Users/mkam1/.rvm/gems/ruby-1.9.3-p194@showroom_harmony_cms:/Users/mkam1/.rvm/gems/ruby-1.9.3-p194@global',
+            env:{
+                GEM_PATH:'/Users/mkam1/.rvm/gems/ruby-1.9.3-p194@showroom_harmony_cms:/Users/mkam1/.rvm/gems/ruby-1.9.3-p194@global'
+            },
           }
       }
     },
@@ -60,7 +63,7 @@ module.exports = function(grunt) {
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'boot_rails_async:default_options', 'nodeunit']);
+  grunt.registerTask('test', ['clean', 'boot_server_async:default_options', 'nodeunit']);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);
