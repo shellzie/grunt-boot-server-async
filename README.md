@@ -85,11 +85,27 @@ grunt.initConfig({
 
 
 #### Example Usage
-An example which starts a rails server. For your rails app to use the correct gemset (not the global), you may find
- that you have to set the GEM_PATH explicitly pointing to your application's gemset path.
+An example which starts a rails server.
+
+The `cwd` property indicates the directory in which you want to execute your command. It supports templates such as
+dirs.instrumentedE2E if that was defined in your initConfig object.
+
+`cmd` is the command used to start your server
+
+`matchString` is the string in stdout that indicates your server has fully started. This is used to determine when the
+task has completed so that done() is called.
+
+In the example below, we are starting a rails server. For your rails app to use the correct gemset (not the global),
+you may find that you have to set the `GEM_PATH` explicitly pointing to your application's gemset path.
 
 ```js
 grunt.initConfig({
+   dirs: {
+       // configurable paths
+       app: 'dev',
+       coverageE2E: 'coverage/e2e',
+       instrumentedE2E: '<%= dirs.coverageE2E %>/instrumented',
+   },
    boot_server_async: {
       rails: {
           options: {
