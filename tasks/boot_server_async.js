@@ -26,7 +26,13 @@ module.exports = function (grunt) {
             cwd:'.',
             failOnError: true,
             matchString: 'pid='   //default which applies to rails server. (indicates rails server booted successfully)
+          //  appName: ''
         });
+
+        //var check_cmd = "ps | grep " + options.appName + " | grep -v grep | awk '{print $1}' | xargs -I{} kill -9 {} > /dev/null";
+//        var check_cmd_process = exec(check_cmd, function(err, stdout, stdin) {
+//        });
+
 
         // TODO: Find a better way to change current working directory, plugins shouldn't change the working directory
         //http://gruntjs.com/creating-plugins#avoid-changing-the-current-working-directory:-process.cwd
@@ -39,11 +45,16 @@ module.exports = function (grunt) {
             env:options.env
         };
 
-        // TODO: Iterate over all process environment variables, not just GEM_PATH
-        process.env['GEM_PATH'] = options.env['GEM_PATH'];
+        //takes whatever options you specified in your gruntfile that you wish to overwrite and puts it into process.env hash
+        //eg.  GEM_PATH: '/Users/mkam1/.rvm/gems/ruby-1.9.3-p194@showroom_harmony_cms:/Users/mkam1/.rvm/gems/ruby-1.9.3-p194@global'
+        // will set the gem path to showroom_harmony_cms so rails will start up with the correct gemset. otherwise, it
+        // uses global gemset if we don't do this.
+        for(var key in options.env) {
+            process.env[key] = options.env[key];  //e.g. process.env['GEM_PATH'] = options.env['GEM_PATH'];
+        }
 
         var child_process = exec(server_cmd, options.args, execOptions, function(err, stdout, stdin){
-
+            //will never get in here because we keep rails server up through entire grunt script.
         });
 
         // data from child goes to output
@@ -59,13 +70,12 @@ module.exports = function (grunt) {
         var printOutput = true;
         // Listen to output data
 
-        var myChunkFunction = function(chunk){
+        var detachIfStarted = function(chunk){
             grunt.verbose.writeln(">>>> CHUNK: "+chunk + " >>> END CHUNK");
 
             if(printOutput){
-
                 if (chunk.indexOf(options.matchString) !== -1) {
-                    child_process.stdout.removeListener('data', myChunkFunction);
+                    child_process.stdout.removeListener('data', detachIfStarted);
                     grunt.verbose.writeln('>>>>>>>>>>>>>>>>>>>>>> Killing Piping');
                     printOutput = false;
                     done();
@@ -73,7 +83,7 @@ module.exports = function (grunt) {
             }
         };
 
-        child_process.stdout.on('data', myChunkFunction);
+        child_process.stdout.on('data', detachIfStarted);
     });
 
 };
