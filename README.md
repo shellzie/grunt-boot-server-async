@@ -1,7 +1,7 @@
 grunt-boot-rails-async
 ======================
 
-> Boot the rails server asynchrounously, . Plugin completes task when server is fully booted, allowing execution against running server.
+> Boot a server asynchronously. Task completes when server is fully booted, allowing execution for your next grunt task.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.4`
@@ -9,23 +9,23 @@ This plugin requires Grunt `~0.4.4`
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
 ```shell
-npm install grunt-boot-rails-async --save-dev
+npm install grunt-boot-server-async --save-dev
 ```
 
 Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
 
 ```js
-grunt.loadNpmTasks('grunt-boot-rails-async');
+grunt.loadNpmTasks('grunt-boot-server-async');
 ```
 
-## The "boot_rails_async" task
+## The "boot_server_async" task
 
 ### Overview
-In your project's Gruntfile, add a section named `boot_rails_async` to the data object passed into `grunt.initConfig()`.
+In your project's Gruntfile, add a section named `boot_server_async` to the data object passed into `grunt.initConfig()`.
 
 ```js
 grunt.initConfig({
-  boot_rails_async: {
+  boot_server_async: {
     options: {
       // Task-specific options go here.
     },
@@ -57,7 +57,7 @@ In this example, the default options are used to do something with whatever. So 
 
 ```js
 grunt.initConfig({
-  boot_rails_async: {
+  boot_server_async: {
     options: {},
     files: {
       'dest/default_options': ['src/testing', 'src/123'],
@@ -71,7 +71,7 @@ In this example, custom options are used to do something else with whatever else
 
 ```js
 grunt.initConfig({
-  boot_rails_async: {
+  boot_server_async: {
     options: {
       separator: ': ',
       punctuation: ' !!!',
@@ -82,6 +82,42 @@ grunt.initConfig({
   },
 });
 ```
+
+
+#### Example Usage
+An example which starts a rails server. For your rails app to use the correct gemset (not the global), you may find
+ that you have to set the GEM_PATH explicitly pointing to your application's gemset path.
+
+```js
+grunt.initConfig({
+   boot_server_async: {
+      rails: {
+          options: {
+              cwd: '<%= dirs.instrumentedE2E %>/dev/spec/dummy',
+              cmd: 'rails server',
+              matchString: 'Ctrl-C',
+              env: {
+                  GEM_PATH: '~/.rvm/gems/ruby-1.9.3-p194@showroom_harmony_cms:~/.rvm/gems/ruby-1.9.3-p194@global'
+              }
+          }
+      }
+});
+```
+
+Start a standalone selenium server:
+
+```js
+grunt.initConfig({
+   boot_server_async: {
+      selenium: {
+          options: {
+              cmd: "webdriver-manager start",
+              matchString: 'Started org.openqa.jetty.jetty.Server',   //the string to look for which signals server has successfully booted
+          }
+      }
+});
+```
+
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).

@@ -26,13 +26,7 @@ module.exports = function (grunt) {
             cwd:'.',
             failOnError: true,
             matchString: 'pid='   //default which applies to rails server. (indicates rails server booted successfully)
-          //  appName: ''
         });
-
-        //var check_cmd = "ps | grep " + options.appName + " | grep -v grep | awk '{print $1}' | xargs -I{} kill -9 {} > /dev/null";
-//        var check_cmd_process = exec(check_cmd, function(err, stdout, stdin) {
-//        });
-
 
         // TODO: Find a better way to change current working directory, plugins shouldn't change the working directory
         //http://gruntjs.com/creating-plugins#avoid-changing-the-current-working-directory:-process.cwd
