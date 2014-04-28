@@ -95,10 +95,10 @@ The `cwd` property indicates the directory in which you want to execute your com
 `matchString` is the string in stdout that indicates your server has fully started. This is used to determine when the
 task has completed and then done() is called.
 
-In the example below, we are starting a rails server. For the rails app to use the correct gemset (not the global),
-you may find that you have to set the `GEM_PATH` explicitly pointing to your application's gemset path to avoid a "gem
-not found error." This is because relying on cd'ing to the `cwd` directory you wish to boot the server in does
-not seem to be enough to switch into the correct gemset.
+If you need to set any process environment variables, that assignment should be in a hash. As an example below,
+when booting a rails server, using `cwd` to change to the directory you want to boot up in is not enough to specify the
+gemset. The gemset does not get switched to properly from global gemset to your application specific gemset so you have to
+explicitly set it here. This is what I found. If there is a better way of doing it, please contribute.
 
 ```js
 grunt.initConfig({
